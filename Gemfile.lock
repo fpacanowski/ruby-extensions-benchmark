@@ -8,6 +8,11 @@ PATH
   specs:
     magnus_extension (0.1.0)
 
+PATH
+  remote: rb_sys_extension
+  specs:
+    rb_sys_extension (0.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -26,6 +31,7 @@ DEPENDENCIES
   c_extension!
   magnus_extension!
   pry
+  rb_sys_extension!
 
 BUNDLED WITH
    2.4.6

@@ -10,4 +10,4 @@ publish = false
 crate-type = ["cdylib"]
 
 [dependencies]
-magnus = { version = "0.4" }
+rb-sys = "0.9"

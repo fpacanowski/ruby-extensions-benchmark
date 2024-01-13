@@ -1,5 +1,6 @@
 require 'c_extension'
 require 'magnus_extension'
+require 'rb_sys_extension'
 require 'benchmark/ips'
 
 PAYLOAD = "ABC"*100
@@ -19,11 +20,13 @@ end
 a = build_big_tree
 b = CExtension.build_big_tree
 c = MagnusExtension.build_big_tree
-raise "This shouldn't happen" unless a == b && b == c
+d = RbSysExtension.build_big_tree
+raise "This shouldn't happen" unless a == b && b == c && c == d
 
 r = Benchmark.ips(format: :raw) do |x|
   x.report('Plain Ruby') { build_big_tree }
   x.report('C extension') { CExtension.build_big_tree }
+  x.report('rb-sys extension') { RbSysExtension.build_big_tree }
   x.report('Magnus extension') { MagnusExtension.build_big_tree }
   x.compare!
 end
