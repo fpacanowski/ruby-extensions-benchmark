@@ -1,0 +1,31 @@
+PATH
+  remote: c_extension
+  specs:
+    c_extension (0.1.0)
+
+PATH
+  remote: magnus_extension
+  specs:
+    magnus_extension (0.1.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    benchmark-ips (2.12.0)
+    coderay (1.1.3)
+    method_source (1.0.0)
+    pry (0.14.2)
+      coderay (~> 1.1)
+      method_source (~> 1.0)
+
+PLATFORMS
+  x86_64-linux
+
+DEPENDENCIES
+  benchmark-ips
+  c_extension!
+  magnus_extension!
+  pry
+
+BUNDLED WITH
+   2.4.6
