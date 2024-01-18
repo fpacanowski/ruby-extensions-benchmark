@@ -14,11 +14,11 @@ fn build_tree(ruby: &Ruby, depth: i32) -> Result<RHash, Error> {
         children.push(build_tree(ruby, depth - 1)?)?;
     }
     result.aset(ruby.get_inner(&CHILDREN), children)?;
-    return Ok(result);
+    Ok(result)
 }
 
 fn build_big_tree(ruby: &Ruby) -> Result<RHash, Error> {
-    return build_tree(ruby, 13);
+    build_tree(ruby, 13)
 }
 
 #[magnus::init]
