@@ -3,7 +3,7 @@ A benchmark comparing different ways of allocating a large nested hash in a Ruby
 
 # How to Run
 ```
-(cd c_extension; rake compile) && (cd rb_sys_extension; rake compile) && (cd magnus_extension; rake compile) && bundle exec ruby benchmark.rb
+rake benchmark
 ```
 
 # Results
