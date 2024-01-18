@@ -4,13 +4,13 @@ static PAYLOAD: &str = "ABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCAB
 
 fn build_tree(ruby: &Ruby, depth: i32) -> RHash {
     let result = ruby.hash_new();
-    result.aset(ruby.to_symbol("label"), PAYLOAD).unwrap();
+    result.aset(ruby.sym_new("label"), PAYLOAD).unwrap();
     let children = ruby.ary_new();
     if depth != 1 {
         children.push(build_tree(ruby, depth - 1)).unwrap();
         children.push(build_tree(ruby, depth - 1)).unwrap();
     }
-    result.aset(ruby.to_symbol("children"), children).unwrap();
+    result.aset(ruby.sym_new("children"), children).unwrap();
     return result;
 }
 
