@@ -5,19 +5,19 @@ static PAYLOAD: &str = "ABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCAB
 static LABEL: Lazy<StaticSymbol> = Lazy::new(|ruby| ruby.sym_new("label"));
 static CHILDREN: Lazy<StaticSymbol> = Lazy::new(|ruby| ruby.sym_new("children"));
 
-fn build_tree(ruby: &Ruby, depth: i32) -> RHash {
+fn build_tree(ruby: &Ruby, depth: i32) -> Result<RHash, Error> {
     let result = ruby.hash_new();
-    result.aset(ruby.get_inner(&LABEL), PAYLOAD).unwrap();
+    result.aset(ruby.get_inner(&LABEL), PAYLOAD)?;
     let children = ruby.ary_new();
     if depth != 1 {
-        children.push(build_tree(ruby, depth - 1)).unwrap();
-        children.push(build_tree(ruby, depth - 1)).unwrap();
+        children.push(build_tree(ruby, depth - 1)?)?;
+        children.push(build_tree(ruby, depth - 1)?)?;
     }
-    result.aset(ruby.get_inner(&CHILDREN), children).unwrap();
-    return result;
+    result.aset(ruby.get_inner(&CHILDREN), children)?;
+    return Ok(result);
 }
 
-fn build_big_tree(ruby: &Ruby) -> RHash {
+fn build_big_tree(ruby: &Ruby) -> Result<RHash, Error> {
     return build_tree(ruby, 13);
 }
 
