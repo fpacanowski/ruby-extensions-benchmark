@@ -1,16 +1,19 @@
-use magnus::{function, prelude::*, Error, RHash, Ruby};
+use magnus::{function, prelude::*, value::Lazy, Error, RHash, Ruby, StaticSymbol};
 
 static PAYLOAD: &str = "ABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABC";
 
+static LABEL: Lazy<StaticSymbol> = Lazy::new(|ruby| ruby.sym_new("label"));
+static CHILDREN: Lazy<StaticSymbol> = Lazy::new(|ruby| ruby.sym_new("children"));
+
 fn build_tree(ruby: &Ruby, depth: i32) -> RHash {
     let result = ruby.hash_new();
-    result.aset(ruby.sym_new("label"), PAYLOAD).unwrap();
+    result.aset(ruby.get_inner(&LABEL), PAYLOAD).unwrap();
     let children = ruby.ary_new();
     if depth != 1 {
         children.push(build_tree(ruby, depth - 1)).unwrap();
         children.push(build_tree(ruby, depth - 1)).unwrap();
     }
-    result.aset(ruby.sym_new("children"), children).unwrap();
+    result.aset(ruby.get_inner(&CHILDREN), children).unwrap();
     return result;
 }
 
