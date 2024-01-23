@@ -1,26 +1,29 @@
-use magnus::{define_module, function, prelude::*, Error, RHash, RArray, Symbol};
+use magnus::{function, prelude::*, value::Lazy, Error, RHash, Ruby, StaticSymbol};
 
 static PAYLOAD: &str = "ABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABC";
 
-fn build_tree(depth: i32) -> RHash {
-    let result = RHash::new();
-    result.aset(Symbol::new("label"), PAYLOAD).unwrap();
-    let children = RArray::new();
+static LABEL: Lazy<StaticSymbol> = Lazy::new(|ruby| ruby.sym_new("label"));
+static CHILDREN: Lazy<StaticSymbol> = Lazy::new(|ruby| ruby.sym_new("children"));
+
+fn build_tree(ruby: &Ruby, depth: i32) -> Result<RHash, Error> {
+    let result = ruby.hash_new();
+    result.aset(ruby.get_inner(&LABEL), PAYLOAD)?;
+    let children = ruby.ary_new();
     if depth != 1 {
-        children.push(build_tree(depth - 1)).unwrap();
-        children.push(build_tree(depth - 1)).unwrap();
+        children.push(build_tree(ruby, depth - 1)?)?;
+        children.push(build_tree(ruby, depth - 1)?)?;
     }
-    result.aset(Symbol::new("children"), children).unwrap();
-    return result;
+    result.aset(ruby.get_inner(&CHILDREN), children)?;
+    Ok(result)
 }
 
-fn build_big_tree() -> RHash {
-    return build_tree(13);
+fn build_big_tree(ruby: &Ruby) -> Result<RHash, Error> {
+    build_tree(ruby, 13)
 }
 
 #[magnus::init]
-fn init() -> Result<(), Error> {
-    let module = define_module("MagnusExtension")?;
+fn init(ruby: &Ruby) -> Result<(), Error> {
+    let module = ruby.define_module("MagnusExtension")?;
     module.define_singleton_method("build_big_tree", function!(build_big_tree, 0))?;
     Ok(())
 }
